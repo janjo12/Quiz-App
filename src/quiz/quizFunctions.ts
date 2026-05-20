@@ -1,8 +1,5 @@
 import { Alert } from 'react-native';
 
-declare const module: any;
-const self = module?.exports ?? {};
-
 export type Question = {
   id: string | number;
   text: string;
@@ -65,12 +62,17 @@ export function showIncorrectAlert(): void {
   ], { cancelable: true });
 }
 
+export const AlertHandlers = {
+  showCorrectAlert,
+  showIncorrectAlert,
+};
+
 export function handleAnswer(selectedValue: boolean): void {
   const question = getCurrentQuestion(currentQuestionIndex, questionBank);
   if (question.answer === selectedValue) {
-    self.showCorrectAlert(goToNextQuestion);
+    AlertHandlers.showCorrectAlert(goToNextQuestion);
   } else {
-    self.showIncorrectAlert();
+    AlertHandlers.showIncorrectAlert();
   }
 }
 
@@ -91,13 +93,7 @@ export function handleNextButtonPress(): void {
 }
 
 export function navigateToCheatScreen(router: { push: (route: any) => void }, currentQuestion: Question): void {
-  router.push({
-    pathname: '/cheat',
-    params: {
-      answer: currentQuestion.answer,
-      questionId: currentQuestion.id,
-    },
-  });
+  router.push(`/cheat?answer=${currentQuestion.answer}&questionId=${currentQuestion.id}`);
 }
 
 export function renderQuestionText(question: Question, index: number, total: number): string {
@@ -111,8 +107,12 @@ export function CheatScreen(): null {
 export function getAnswerFromParams(route: { params?: any }): { answer: boolean; questionId?: string | number } {
   const answerParam = route?.params?.answer;
   const questionId = route?.params?.questionId;
+  const answer =
+    typeof answerParam === 'boolean'
+      ? answerParam
+      : answerParam === 'true' || answerParam === true;
   return {
-    answer: typeof answerParam === 'boolean' ? answerParam : false,
+    answer,
     questionId,
   };
 }

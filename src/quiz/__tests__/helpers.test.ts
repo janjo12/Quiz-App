@@ -3,14 +3,11 @@ import * as Q from '../quizFunctions';
 describe('shared helpers', () => {
   test('navigateToCheatScreen calls router.push with answer param', () => {
     const router = { push: jest.fn() } as any;
-    const question = { id: '1', answer: false };
+    const question = { id: '1', text: 'Sample', answer: false };
     Q.navigateToCheatScreen(router, question);
     expect(router.push).toHaveBeenCalled();
     const arg = router.push.mock.calls[0][0];
-    // Expect a pathname and params to be passed
-    expect(arg).toHaveProperty('pathname');
-    expect(arg).toHaveProperty('params');
-    expect(arg.params.answer).toBe(false);
+    expect(arg).toBe('/cheat?answer=false&questionId=1');
   });
 
   test('IconButton and TrueFalseButton exist and are callable', () => {

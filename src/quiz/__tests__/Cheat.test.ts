@@ -9,6 +9,20 @@ describe('Cheat functions', () => {
     expect(res.questionId).toBe('q1');
   });
 
+  test('getAnswerFromParams converts string booleans correctly', () => {
+    const route = { params: { answer: 'true', questionId: 'q1' } } as any;
+    const res = Q.getAnswerFromParams(route);
+    expect(res.answer).toBe(true);
+    expect(res.questionId).toBe('q1');
+  });
+
+  test('getAnswerFromParams converts false string booleans correctly', () => {
+    const route = { params: { answer: 'false', questionId: 'q2' } } as any;
+    const res = Q.getAnswerFromParams(route);
+    expect(res.answer).toBe(false);
+    expect(res.questionId).toBe('q2');
+  });
+
   test('handleShowAnswer sets revealed state via setter', () => {
     const setRevealed = jest.fn();
     Q.handleShowAnswer(setRevealed, false);

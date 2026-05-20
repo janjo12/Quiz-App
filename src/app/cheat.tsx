@@ -1,18 +1,18 @@
 import { ThemedText } from '@/components/themed-text';
 import { ThemedView } from '@/components/themed-view';
-import { getAnswerFromParams, recordCheatEvent } from '@/quiz/quizFunctions';
-import { useRouter, useSearchParams } from 'expo-router';
+import { getAnswerFromParams, handleShowAnswer, recordCheatEvent } from '@/quiz/quizFunctions';
+import { useLocalSearchParams, useRouter } from 'expo-router';
 import React, { useState } from 'react';
 import { StyleSheet, TouchableOpacity } from 'react-native';
 
 export default function CheatRoute() {
   const router = useRouter();
-  const params = useSearchParams();
+  const params = useLocalSearchParams();
   const { answer, questionId } = getAnswerFromParams({ params });
   const [revealed, setRevealed] = useState(false);
 
   function handleShow() {
-    setRevealed(true);
+    handleShowAnswer(setRevealed, answer);
     recordCheatEvent(questionId);
   }
 
@@ -32,10 +32,7 @@ export default function CheatRoute() {
 
         {revealed && (
           <ThemedView style={styles.answerBox}>
-            <ThemedText style={styles.answerLabel}>Answer:</ThemedText>
-            <ThemedText type="title" style={styles.answerText}>
-              {answer ? 'True' : 'False'}
-            </ThemedText>
+            <ThemedText style={styles.answerText}>Answer: {answer ? 'True' : 'False'}</ThemedText>
           </ThemedView>
         )}
 

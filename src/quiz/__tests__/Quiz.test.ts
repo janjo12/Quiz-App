@@ -26,11 +26,10 @@ describe('Quiz functions', () => {
   });
 
   test('handleAnswer calls showCorrectAlert for correct answers', () => {
-    // This test expects that handleAnswer delegates to showCorrectAlert
-    const spyCorrect = jest.spyOn(Q, 'showCorrectAlert').mockImplementation(() => {});
-    const spyIncorrect = jest.spyOn(Q, 'showIncorrectAlert').mockImplementation(() => {});
+    // This test expects that handleAnswer delegates to the exported AlertHandlers helper
+    const spyCorrect = jest.spyOn(Q.AlertHandlers, 'showCorrectAlert').mockImplementation(() => {});
+    const spyIncorrect = jest.spyOn(Q.AlertHandlers, 'showIncorrectAlert').mockImplementation(() => {});
 
-    // Call with a value matching the (assumed) current question's answer
     Q.handleAnswer(true);
 
     expect(spyCorrect).toHaveBeenCalled();

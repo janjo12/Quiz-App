@@ -6,3 +6,7 @@ jest.mock('expo-router', () => ({
   useSearchParams: () => ({}),
   Link: ({ children }: any) => children,
 }));
+
+jest.mock('@expo/vector-icons', () => ({
+  Ionicons: () => null,
+}));

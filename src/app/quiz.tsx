@@ -76,7 +76,7 @@ export default function QuizRoute() {
           </TouchableOpacity>
 
           <TouchableOpacity
-            onPress={() => router.push({ pathname: '/cheat', params: { answer: current.answer, questionId: current.id } })}
+            onPress={() => router.push(`/cheat?answer=${current.answer}&questionId=${current.id}`)}
             style={styles.cheatButton}
           >
             <ThemedText style={styles.cheatLabel}>Cheat</ThemedText>
