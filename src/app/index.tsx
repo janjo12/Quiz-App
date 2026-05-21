@@ -16,7 +16,7 @@ export default function HomeScreen() {
             Quick Study Quiz
           </ThemedText>
           <ThemedText style={styles.description}>
-            Practice a quick true/false quiz, get instant feedback, and review the answer on the cheat screen.
+            Practicase a quick true/false quiz, get instant feedback, and review the answer on the cheat screen.
           </ThemedText>
           <TouchableOpacity style={styles.button} onPress={() => router.push('/quiz')}>
             <ThemedText style={styles.buttonText}>Open Quiz</ThemedText>

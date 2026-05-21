@@ -5,10 +5,19 @@ import { useLocalSearchParams, useRouter } from 'expo-router';
 import React, { useState } from 'react';
 import { StyleSheet, TouchableOpacity } from 'react-native';
 
+function parseIndexParam(value: string | number | string[] | undefined): number {
+  if (Array.isArray(value)) {
+    value = value[0];
+  }
+  const parsed = typeof value === 'string' ? Number(value) : typeof value === 'number' ? value : NaN;
+  return Number.isFinite(parsed) && parsed >= 0 ? Math.floor(parsed) : 0;
+}
+
 export default function CheatRoute() {
   const router = useRouter();
   const params = useLocalSearchParams();
   const { answer, questionId } = getAnswerFromParams({ params });
+  const index = parseIndexParam(params.index);
   const [revealed, setRevealed] = useState(false);
 
   function handleShow() {
@@ -36,7 +45,7 @@ export default function CheatRoute() {
           </ThemedView>
         )}
 
-        <TouchableOpacity onPress={() => router.back()} style={styles.backButton}>
+        <TouchableOpacity onPress={() => router.replace(`/quiz?index=${index}`)} style={styles.backButton}>
           <ThemedText style={styles.backButtonText}>Back to Quiz</ThemedText>
         </TouchableOpacity>
       </ThemedView>

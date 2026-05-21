@@ -2,14 +2,24 @@ import { ThemedText } from '@/components/themed-text';
 import { ThemedView } from '@/components/themed-view';
 import { cycleIndex, getQuestionBank } from '@/quiz/quizFunctions';
 import { Ionicons } from '@expo/vector-icons';
-import { useRouter } from 'expo-router';
+import { useLocalSearchParams, useRouter } from 'expo-router';
 import React, { useState } from 'react';
 import { Alert, StyleSheet, TouchableOpacity, View } from 'react-native';
 
+function parseIndexParam(value: string | number | string[] | undefined): number {
+  if (Array.isArray(value)) {
+    value = value[0];
+  }
+  const parsed = typeof value === 'string' ? Number(value) : typeof value === 'number' ? value : NaN;
+  return Number.isFinite(parsed) && parsed >= 0 ? Math.floor(parsed) : 0;
+}
+
 export default function QuizRoute() {
   const router = useRouter();
+  const params = useLocalSearchParams();
   const bank = getQuestionBank();
-  const [index, setIndex] = useState(0);
+  const initialIndex = parseIndexParam(params.index);
+  const [index, setIndex] = useState(initialIndex);
   const [disabled, setDisabled] = useState(false);
 
   const current = bank[index];
@@ -76,7 +86,7 @@ export default function QuizRoute() {
           </TouchableOpacity>
 
           <TouchableOpacity
-            onPress={() => router.push(`/cheat?answer=${current.answer}&questionId=${current.id}`)}
+            onPress={() => router.push(`/cheat?answer=${current.answer}&questionId=${current.id}&index=${index}`)}
             style={styles.cheatButton}
           >
             <ThemedText style={styles.cheatLabel}>Cheat</ThemedText>
