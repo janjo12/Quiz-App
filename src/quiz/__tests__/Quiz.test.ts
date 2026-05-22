@@ -1,4 +1,4 @@
-import * as Q from '../quizFunctions';
+import * as Q from '../helpers';
 
 describe('Quiz functions', () => {
   test('getQuestionBank returns an array of question objects', () => {

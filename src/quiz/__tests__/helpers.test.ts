@@ -1,4 +1,4 @@
-import * as Q from '../quizFunctions';
+import * as Q from '../helpers';
 
 describe('shared helpers', () => {
   test('navigateToCheatScreen calls router.push with answer param', () => {

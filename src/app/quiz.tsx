@@ -1,10 +1,19 @@
-import { ThemedText } from '@/components/themed-text';
-import { ThemedView } from '@/components/themed-view';
-import { cycleIndex, getQuestionBank } from '@/quiz/quizFunctions';
-import { Ionicons } from '@expo/vector-icons';
+//#region IMPORTS
+import AnswerButton from '@/components/AnswerButton';
+import AnswerRow from '@/components/AnswerRow';
+import Background from '@/components/Background';
+import CheatButton from '@/components/CheatButton';
+import Container from '@/components/Container';
+import NavButton from '@/components/NavButton';
+import ProgressText from '@/components/ProgressText';
+import QuestionCard from '@/components/QuestionCard';
+import Title from '@/components/Title';
 import { useLocalSearchParams, useRouter } from 'expo-router';
 import React, { useState } from 'react';
-import { Alert, StyleSheet, TouchableOpacity, View } from 'react-native';
+import { Alert, View } from 'react-native';
+
+import { cycleIndex, getQuestionBank } from '@/quiz/helpers';
+//#endregion IMPORTS
 
 function parseIndexParam(value: string | number | string[] | undefined): number {
   if (Array.isArray(value)) {
@@ -15,11 +24,17 @@ function parseIndexParam(value: string | number | string[] | undefined): number 
 }
 
 export default function QuizRoute() {
+
   const router = useRouter();
+
   const params = useLocalSearchParams();
+
   const bank = getQuestionBank();
+
   const initialIndex = parseIndexParam(params.index);
+
   const [index, setIndex] = useState(initialIndex);
+
   const [disabled, setDisabled] = useState(false);
 
   const current = bank[index];
@@ -32,10 +47,12 @@ export default function QuizRoute() {
     setIndex((i) => cycleIndex(i, -1, bank.length));
   }
 
-  function handleAnswer(value: boolean) {
-    if (value === current.answer) {
-      setDisabled(true);
-      Alert.alert('Correct!', 'Great job — moving to the next question.', [
+  function handleCorrectAnswer() {
+    setDisabled(true);
+    Alert.alert(
+      'Correct!',
+      'Great job — moving to the next question.',
+      [
         {
           text: 'OK',
           onPress: () => {
@@ -43,151 +60,48 @@ export default function QuizRoute() {
             advance();
           },
         },
-      ], { cancelable: false });
+      ],
+      { cancelable: false }
+    );
+  }
+
+  function handleIncorrectAnswer() {
+    Alert.alert('Incorrect', 'Try again on the same question.');
+  }
+
+  function handleAnswer(value: boolean) {
+    if (value === current.answer) {
+      handleCorrectAnswer();
     } else {
-      Alert.alert('Incorrect', 'Try again on the same question.');
+      handleIncorrectAnswer();
     }
   }
 
+  function handleCheat() {
+    router.push(`/cheat?answer=${current.answer}&questionId=${current.id}&index=${index}`);
+  }
+
   return (
-    <ThemedView style={styles.background}>
-      <ThemedView style={styles.container}>
-        <ThemedText type="title" style={styles.title}>
-          True/False Quiz
-        </ThemedText>
-        <ThemedText style={styles.progress} type="small">
-          Question {index + 1} of {bank.length}
-        </ThemedText>
+    <Background>
+      <Container>
+        <Title>True/False Quiz</Title>
+        <ProgressText>Question {index + 1} of {bank.length}</ProgressText>
 
-        <ThemedView style={styles.card}>
-          <ThemedText style={styles.questionText}>{current.text}</ThemedText>
-        </ThemedView>
+        <QuestionCard text={current.text} />
 
-        <View style={styles.answerRow}>
-          <TouchableOpacity
-            onPress={() => handleAnswer(true)}
-            disabled={disabled}
-            style={[styles.choiceButton, styles.trueButton, disabled && styles.disabledButton]}
-          >
-            <ThemedText style={styles.choiceLabel}>True</ThemedText>
-          </TouchableOpacity>
-          <TouchableOpacity
-            onPress={() => handleAnswer(false)}
-            disabled={disabled}
-            style={[styles.choiceButton, styles.falseButton, disabled && styles.disabledButton]}
-          >
-            <ThemedText style={styles.choiceLabel}>False</ThemedText>
-          </TouchableOpacity>
+        <AnswerRow>
+          <AnswerButton label="True" onPress={() => handleAnswer(true)} disabled={disabled} variant="true" />
+          <AnswerButton label="False" onPress={() => handleAnswer(false)} disabled={disabled} variant="false" />
+        </AnswerRow>
+
+        <View style={{ flexDirection: 'row', alignItems: 'center', gap: 10, marginTop: 18 }}>
+          <NavButton label="Previous" iconName="chevron-back-circle" onPress={retreat} />
+          <CheatButton onPress={handleCheat}>Cheat</CheatButton>
+          <NavButton label="Next" iconName="chevron-forward-circle" onPress={advance} />
         </View>
-
-        <View style={styles.navRow}>
-          <TouchableOpacity onPress={retreat} style={styles.iconButton} accessibilityLabel="Previous question">
-            <Ionicons name="chevron-back-circle" size={42} color="#4F46E5" />
-          </TouchableOpacity>
-
-          <TouchableOpacity
-            onPress={() => router.push(`/cheat?answer=${current.answer}&questionId=${current.id}&index=${index}`)}
-            style={styles.cheatButton}
-          >
-            <ThemedText style={styles.cheatLabel}>Cheat</ThemedText>
-          </TouchableOpacity>
-
-          <TouchableOpacity
-            onPress={() => setIndex((i) => cycleIndex(i, 1, bank.length))}
-            style={styles.iconButton}
-            accessibilityLabel="Next question"
-          >
-            <Ionicons name="chevron-forward-circle" size={42} color="#4F46E5" />
-          </TouchableOpacity>
-        </View>
-      </ThemedView>
-    </ThemedView>
+      </Container>
+    </Background>
   );
 }
 
-const styles = StyleSheet.create({
-  background: {
-    flex: 1,
-    backgroundColor: '#EFF3FF',
-    paddingTop: 24,
-  },
-  container: {
-    flex: 1,
-    marginHorizontal: 18,
-    alignItems: 'center',
-  },
-  title: {
-    marginBottom: 8,
-  },
-  progress: {
-    color: '#6B7280',
-    marginBottom: 18,
-  },
-  card: {
-    width: '100%',
-    backgroundColor: '#FFFFFF',
-    borderRadius: 22,
-    padding: 24,
-    shadowColor: '#000',
-    shadowOpacity: 0.08,
-    shadowOffset: { width: 0, height: 14 },
-    shadowRadius: 24,
-    elevation: 6,
-    marginBottom: 24,
-  },
-  questionText: {
-    fontSize: 18,
-    lineHeight: 26,
-    textAlign: 'center',
-  },
-  answerRow: {
-    flexDirection: 'row',
-    justifyContent: 'center',
-    width: '100%',
-    gap: 12,
-  },
-  choiceButton: {
-    flex: 1,
-    paddingVertical: 16,
-    borderRadius: 16,
-    alignItems: 'center',
-    justifyContent: 'center',
-    shadowColor: '#000',
-    shadowOpacity: 0.08,
-    shadowOffset: { width: 0, height: 8 },
-    shadowRadius: 16,
-    elevation: 3,
-  },
-  trueButton: {
-    backgroundColor: '#DCFCE7',
-  },
-  falseButton: {
-    backgroundColor: '#FEE2E2',
-  },
-  disabledButton: {
-    opacity: 0.55,
-  },
-  choiceLabel: {
-    fontWeight: '700',
-  },
-  navRow: {
-    flexDirection: 'row',
-    alignItems: 'center',
-    justifyContent: 'space-between',
-    width: '100%',
-    marginTop: 28,
-  },
-  iconButton: {
-    padding: 4,
-  },
-  cheatButton: {
-    paddingHorizontal: 18,
-    paddingVertical: 12,
-    borderRadius: 16,
-    backgroundColor: '#E0E7FF',
-  },
-  cheatLabel: {
-    fontWeight: '700',
-    color: '#4338CA',
-  },
-});
+

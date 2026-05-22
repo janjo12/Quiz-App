@@ -10,6 +10,10 @@ jest.mock('expo-router', () => ({
   Link: ({ children }: any) => children,
 }));
 
+import BackButton from '@/components/BackButton';
+import CheatButton from '@/components/CheatButton';
+import ShowButton from '@/components/ShowButton';
+
 describe('Route components', () => {
   beforeEach(() => {
     (Router.useRouter as jest.Mock).mockReturnValue({ push: jest.fn(), back: jest.fn() });
@@ -42,5 +46,32 @@ describe('Route components', () => {
     fireEvent.press(getByText('Show Answer'));
 
     expect(getByText('Answer: False')).toBeTruthy();
+  });
+
+  test('ShowButton renders children and fires onPress', () => {
+    const onPress = jest.fn();
+    const { getByText } = render(<ShowButton onPress={onPress}>Show Answer</ShowButton>);
+    const btn = getByText('Show Answer');
+    expect(btn).toBeTruthy();
+    fireEvent.press(btn);
+    expect(onPress).toHaveBeenCalled();
+  });
+
+  test('CheatButton renders children and fires onPress', () => {
+    const onPress = jest.fn();
+    const { getByText } = render(<CheatButton onPress={onPress}>Cheat</CheatButton>);
+    const btn = getByText('Cheat');
+    expect(btn).toBeTruthy();
+    fireEvent.press(btn);
+    expect(onPress).toHaveBeenCalled();
+  });
+
+  test('BackButton renders children and fires onPress', () => {
+    const onPress = jest.fn();
+    const { getByText } = render(<BackButton onPress={onPress}>Back</BackButton>);
+    const btn = getByText('Back');
+    expect(btn).toBeTruthy();
+    fireEvent.press(btn);
+    expect(onPress).toHaveBeenCalled();
   });
 });

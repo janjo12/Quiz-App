@@ -1,4 +1,4 @@
-import * as Q from '../quizFunctions';
+import * as Q from '../helpers';
 
 describe('Cheat functions', () => {
   test('getAnswerFromParams extracts answer and questionId', () => {
