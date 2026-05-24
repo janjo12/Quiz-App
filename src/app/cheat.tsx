@@ -9,6 +9,11 @@ import Title from '@/components/Title';
 import { useLocalSearchParams, useRouter } from 'expo-router';
 import React, { useState } from 'react';
 
+/**
+ * Read the answer payload from route params.
+ * Expo Router query params arrive as strings on normal navigation, but tests
+ * may pass booleans directly, so both forms are accepted here.
+ */
 export function getAnswerFromParams(route: { params?: any }): { answer: boolean; questionId?: string | number } {
   const answerParam = route?.params?.answer;
   const questionId = route?.params?.questionId;
@@ -22,22 +27,10 @@ export function getAnswerFromParams(route: { params?: any }): { answer: boolean;
   };
 }
 
-export function handleShowAnswer(setRevealed: (value: boolean) => void, answer: boolean): void {
-  setRevealed(true);
-}
-
-export function recordCheatEvent(questionId: string | number | undefined): void {
-  console.log('Cheat viewed for question:', questionId);
-}
-
-export function CheatScreen(): null {
-  return null;
-}
-
-export function navigateBack(router: { back: () => void }): void {
-  router.back();
-}
-
+/**
+ * Convert the quiz index query param into a safe zero-based index.
+ * Missing, negative, or non-numeric values fall back to the first question.
+ */
 function parseIndexParam(value: string | number | string[] | undefined): number {
   if (Array.isArray(value)) {
     value = value[0];
@@ -48,18 +41,19 @@ function parseIndexParam(value: string | number | string[] | undefined): number 
 
 export default function CheatRoute() {
   const router = useRouter();
-
   const params = useLocalSearchParams();
 
+  // Pull the current answer and quiz position from the URL created by quiz.tsx.
   const { answer, questionId } = getAnswerFromParams({ params });
-
   const index = parseIndexParam(params.index);
 
+  // Keep the answer hidden until the user explicitly asks to see it.
   const [revealed, setRevealed] = useState(false);
 
+  /** Reveal the answer and leave a simple trace for the question that was viewed. */
   function handleShow() {
-    handleShowAnswer(setRevealed, answer);
-    recordCheatEvent(questionId);
+    setRevealed(true);
+    console.log('Cheat viewed for question:', questionId);
   }
 
   return (
@@ -76,6 +70,7 @@ export default function CheatRoute() {
           </AnswerBox>
         )}
 
+        {/* Replace keeps the back stack focused on the quiz flow instead of piling up cheat screens. */}
         <BackButton onPress={() => router.replace(`/quiz?index=${index}`)}>Back to Quiz</BackButton>
       </Container>
     </Background>

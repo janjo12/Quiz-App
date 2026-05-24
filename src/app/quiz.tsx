@@ -80,57 +80,42 @@ function parseIndexParam(value: string | number | string[] | undefined): number 
   return Number.isFinite(parsed) && parsed >= 0 ? Math.floor(parsed) : 0;
 }
 
-/**
- * Quiz screen route.
- * Renders the current question, answer buttons, navigation buttons, and a cheat action.
- */
 export default function QuizRoute() {
   const router = useRouter();
   const params = useLocalSearchParams();
 
+  // Use the quiz index from the URL when returning from the cheat screen.
   const bank = useMemo(() => getQuestionBank(), []);
   const initialIndex = parseIndexParam(params.index);
   const [index, setIndex] = useState(initialIndex);
 
   const current = bank[index];
 
-  /** Advance to the next question. */
   const advance = () => setIndex((i) => cycleIndex(i, 1, bank.length));
 
-  /** Return to the previous question. */
   const retreat = () => setIndex((i) => cycleIndex(i, -1, bank.length));
 
-  /** Show the correct-answer alert and move forward afterward. */
-  const handleCorrectAnswer = () => {
-    Alert.alert(
-      'Correct!',
-      'Great job — moving to the next question.',
-      [
-        {
-          text: 'OK',
-          onPress: advance,
-        },
-      ],
-      { cancelable: false }
-    );
-  };
-
-  /** Show the incorrect-answer alert. */
-  const handleIncorrectAnswer = () => {
-    Alert.alert('Incorrect', 'Try again.');
-  };
-
-  /** Evaluate a submitted answer. */
   const handleAnswer = (value: boolean) => {
     if (value === current.answer) {
-      handleCorrectAnswer();
+      // Correct answers advance only after the user dismisses the feedback.
+      Alert.alert(
+        'Correct!',
+        'Great job - moving to the next question.',
+        [
+          {
+            text: 'OK',
+            onPress: advance,
+          },
+        ],
+        { cancelable: false }
+      );
     } else {
-      handleIncorrectAnswer();
+      Alert.alert('Incorrect', 'Try again.');
     }
   };
 
-  /** Navigate to the cheat screen for the current question. */
   const handleCheat = () => {
+    // Send enough context for the cheat screen to reveal the answer and return here.
     router.push(`/cheat?answer=${current.answer}&questionId=${current.id}&index=${index}`);
   };
 

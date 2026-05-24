@@ -23,14 +23,8 @@ describe('Cheat functions', () => {
     expect(res.questionId).toBe('q2');
   });
 
-  test('handleShowAnswer sets revealed state via setter', () => {
-    const setRevealed = jest.fn();
-    Q.handleShowAnswer(setRevealed, false);
-    expect(setRevealed).toHaveBeenCalledWith(true);
-  });
-
-  test('CheatScreen and navigateBack should exist', () => {
-    expect(typeof Q.CheatScreen).toBe('function');
-    expect(typeof Q.navigateBack).toBe('function');
+  test('does not export unused route placeholder helpers', () => {
+    expect(Q).not.toHaveProperty('CheatScreen');
+    expect(Q).not.toHaveProperty('navigateBack');
   });
 });
