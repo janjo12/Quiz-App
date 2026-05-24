@@ -15,7 +15,7 @@ export default function HomeScreen() {
         <Card>
           <Title>Quick Study Quiz</Title>
           <DescriptionText>
-            Practicase a quick true/false quiz, get instant feedback, and review the answer on the cheat screen.
+            Practice a quick true/false quiz, get instant feedback, and review the answer on the cheat screen.
           </DescriptionText>
           <PrimaryButton onPress={() => router.push('/quiz')}>Open Quiz</PrimaryButton>
         </Card>

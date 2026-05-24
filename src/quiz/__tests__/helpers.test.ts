@@ -1,22 +1,23 @@
-import * as Q from '../helpers';
+import { recordCheatEvent } from '@/app/cheat';
+import { cycleIndex, getQuestionBank } from '@/app/quiz';
 
 describe('shared helpers', () => {
-  test('navigateToCheatScreen calls router.push with answer param', () => {
-    const router = { push: jest.fn() } as any;
-    const question = { id: '1', text: 'Sample', answer: false };
-    Q.navigateToCheatScreen(router, question);
-    expect(router.push).toHaveBeenCalled();
-    const arg = router.push.mock.calls[0][0];
-    expect(arg).toBe('/cheat?answer=false&questionId=1');
+  test('getQuestionBank returns a stable shuffle within a session', () => {
+    const first = getQuestionBank();
+    const second = getQuestionBank();
+
+    expect(Array.isArray(first)).toBe(true);
+    expect(first.length).toBeGreaterThan(0);
+    expect(second).toEqual(first);
   });
 
-  test('IconButton and TrueFalseButton exist and are callable', () => {
-    expect(typeof Q.IconButton).toBe('function');
-    expect(typeof Q.TrueFalseButton).toBe('function');
+  test('cycleIndex wraps correctly', () => {
+    expect(cycleIndex(2, 1, 4)).toBe(3);
+    expect(cycleIndex(3, 1, 4)).toBe(0);
+    expect(cycleIndex(0, -1, 4)).toBe(3);
   });
 
-  test('recordCheatEvent and disableInputWhileAlert exist', () => {
-    expect(typeof Q.recordCheatEvent).toBe('function');
-    expect(typeof Q.disableInputWhileAlert).toBe('function');
+  test('recordCheatEvent exists', () => {
+    expect(typeof recordCheatEvent).toBe('function');
   });
 });

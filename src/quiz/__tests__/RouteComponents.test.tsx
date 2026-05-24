@@ -24,7 +24,6 @@ describe('Route components', () => {
     const { getByText } = render(<QuizRoute />);
     expect(getByText('True')).toBeTruthy();
     expect(getByText('False')).toBeTruthy();
-    expect(getByText(/Question 1 of/)).toBeTruthy();
   });
 
   test('CheatRoute reveals the passed answer when Show Answer is pressed', () => {

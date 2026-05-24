@@ -1,5 +1,6 @@
 import React from 'react';
-import { SafeAreaView, StyleSheet } from 'react-native-safe-area-context';
+import { StyleSheet } from 'react-native';
+import { SafeAreaView } from 'react-native-safe-area-context';
 
 export default function SafeAreaWrapper({ children }: { children: React.ReactNode }) {
   return <SafeAreaView style={styles.safeArea}>{children}</SafeAreaView>;

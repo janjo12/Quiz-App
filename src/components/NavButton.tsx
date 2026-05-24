@@ -10,16 +10,21 @@ export default function NavButton({ label, iconName, onPress }: Props) {
   return (
     <Pressable onPress={onPress} style={styles.progressButton} accessibilityLabel={`${label} question`}>
       <View style={styles.navButtonContent}>
-        {isBack && <Ionicons name={iconName as any} size={42} color="#4F46E5" />}
+        {isBack && <Ionicons name={iconName as any} size={42} color="#FFFFFF" />}
         <ThemedText style={styles.navButtonLabel}>{label}</ThemedText>
-        {!isBack && <Ionicons name={iconName as any} size={42} color="#4F46E5" />}
+        {!isBack && <Ionicons name={iconName as any} size={42} color="#FFFFFF" />}
       </View>
     </Pressable>
   );
 }
 
 const styles = StyleSheet.create({
-  progressButton: { padding: 4 },
-  navButtonContent: { flexDirection: 'row', alignItems: 'center', gap: 6 },
-  navButtonLabel: { fontWeight: '700', color: '#4F46E5', fontSize: 16 },
+  progressButton: {
+    backgroundColor: '#4F46E5',
+    paddingHorizontal: 16,
+    paddingVertical: 12,
+    borderRadius: 12,
+  },
+  navButtonContent: { flexDirection: 'row', alignItems: 'center', gap: 8 },
+  navButtonLabel: { fontWeight: '700', color: '#FFFFFF', fontSize: 16 },
 });

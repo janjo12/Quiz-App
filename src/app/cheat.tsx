@@ -1,4 +1,3 @@
-//#region IMPORTS
 import AnswerBox from '@/components/AnswerBox';
 import AnswerText from '@/components/AnswerText';
 import BackButton from '@/components/BackButton';
@@ -10,7 +9,35 @@ import Title from '@/components/Title';
 import { useLocalSearchParams, useRouter } from 'expo-router';
 import React, { useState } from 'react';
 
-import { getAnswerFromParams, handleShowAnswer, recordCheatEvent } from '@/quiz/helpers';
+// inlined helpers (moved from src/quiz/helpers.ts)
+export function getAnswerFromParams(route: { params?: any }): { answer: boolean; questionId?: string | number } {
+  const answerParam = route?.params?.answer;
+  const questionId = route?.params?.questionId;
+  const answer =
+    typeof answerParam === 'boolean'
+      ? answerParam
+      : answerParam === 'true' || answerParam === true;
+  return {
+    answer,
+    questionId,
+  };
+}
+
+export function handleShowAnswer(setRevealed: (value: boolean) => void, answer: boolean): void {
+  setRevealed(true);
+}
+
+export function recordCheatEvent(questionId: string | number | undefined): void {
+  console.log('Cheat viewed for question:', questionId);
+}
+
+export function CheatScreen(): null {
+  return null;
+}
+
+export function navigateBack(router: { back: () => void }): void {
+  router.back();
+}
 //#endregion IMPORTS
 
 function parseIndexParam(value: string | number | string[] | undefined): number {
