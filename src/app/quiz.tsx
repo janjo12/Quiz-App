@@ -117,7 +117,7 @@ export default function QuizRoute() {
 
   /** Show the incorrect-answer alert. */
   const handleIncorrectAnswer = () => {
-    Alert.alert('Incorrect', 'Try again on the same question.');
+    Alert.alert('Incorrect', 'Try again.');
   };
 
   /** Evaluate a submitted answer. */

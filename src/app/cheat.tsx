@@ -9,7 +9,6 @@ import Title from '@/components/Title';
 import { useLocalSearchParams, useRouter } from 'expo-router';
 import React, { useState } from 'react';
 
-// inlined helpers (moved from src/quiz/helpers.ts)
 export function getAnswerFromParams(route: { params?: any }): { answer: boolean; questionId?: string | number } {
   const answerParam = route?.params?.answer;
   const questionId = route?.params?.questionId;
@@ -38,7 +37,6 @@ export function CheatScreen(): null {
 export function navigateBack(router: { back: () => void }): void {
   router.back();
 }
-//#endregion IMPORTS
 
 function parseIndexParam(value: string | number | string[] | undefined): number {
   if (Array.isArray(value)) {
