@@ -1,14 +1,9 @@
-import AnswerButton from '@/components/AnswerButton';
-import AnswerRow from '@/components/AnswerRow';
-import Background from '@/components/Background';
-import CheatButton from '@/components/CheatButton';
-import Container from '@/components/Container';
-import NavButton from '@/components/NavButton';
-import QuestionCard from '@/components/QuestionCard';
-import Title from '@/components/Title';
+import AppText from '@/components/AppText';
+import Button from '@/components/Button';
+import { Content, Row, Screen, Surface } from '@/components/Layout';
 import { useLocalSearchParams, useRouter } from 'expo-router';
 import React, { useMemo, useState } from 'react';
-import { Alert, View } from 'react-native';
+import { Alert } from 'react-native';
 
 type Question = {
   id: string | number;
@@ -120,28 +115,28 @@ export default function QuizRoute() {
   };
 
   return (
-    <Background>
-      <Container>
-        <Title>True/False Quiz</Title>
+    <Screen>
+      <Content>
+        <AppText variant="title">True/False Quiz</AppText>
 
-        <QuestionCard text={current.text} />
+        <Surface variant="question">
+          <AppText variant="question">{current.text}</AppText>
+        </Surface>
 
-        <AnswerRow>
-          <AnswerButton label="True" onPress={() => handleAnswer(true)} variant="true" />
-          <AnswerButton label="False" onPress={() => handleAnswer(false)} variant="false" />
-        </AnswerRow>
+        <Row>
+          <Button equalWidth onPress={() => handleAnswer(true)} variant="success">True</Button>
+          <Button equalWidth onPress={() => handleAnswer(false)} variant="danger">False</Button>
+        </Row>
 
-        <View style={{ flexDirection: 'row', alignItems: 'center', gap: 10, marginTop: 18 }}>
-          <NavButton label="Previous" iconName="chevron-back-circle" onPress={retreat} />
-          <NavButton label="Next" iconName="chevron-forward-circle" onPress={advance} />
-        </View>
+        <Row variant="nav">
+          <Button equalWidth iconName="chevron-back-circle" onPress={retreat}>Previous</Button>
+          <Button equalWidth iconName="chevron-forward-circle" iconPosition="right" onPress={advance}>Next</Button>
+        </Row>
 
-        <View style={{ alignItems: 'center', marginTop: 12 }}>
-          <CheatButton onPress={handleCheat}>Cheat</CheatButton>
-        </View>
-      </Container>
-    </Background>
+        <Row variant="center">
+          <Button onPress={handleCheat} variant="soft">Cheat</Button>
+        </Row>
+      </Content>
+    </Screen>
   );
 }
-
-

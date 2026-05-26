@@ -5,18 +5,16 @@ import * as Router from 'expo-router';
 import React from 'react';
 
 jest.mock('expo-router', () => ({
-  useRouter: jest.fn(() => ({ push: jest.fn(), back: jest.fn() })),
+  useRouter: jest.fn(() => ({ push: jest.fn(), replace: jest.fn(), back: jest.fn() })),
   useLocalSearchParams: jest.fn(() => ({})),
   Link: ({ children }: any) => children,
 }));
 
-import BackButton from '@/components/BackButton';
-import CheatButton from '@/components/CheatButton';
-import ShowButton from '@/components/ShowButton';
+import Button from '@/components/Button';
 
 describe('Route components', () => {
   beforeEach(() => {
-    (Router.useRouter as jest.Mock).mockReturnValue({ push: jest.fn(), back: jest.fn() });
+    (Router.useRouter as jest.Mock).mockReturnValue({ push: jest.fn(), replace: jest.fn(), back: jest.fn() });
     (Router.useLocalSearchParams as jest.Mock).mockReturnValue({});
   });
 
@@ -47,27 +45,27 @@ describe('Route components', () => {
     expect(getByText('Answer: False')).toBeTruthy();
   });
 
-  test('ShowButton renders children and fires onPress', () => {
+  test('Button renders children and fires onPress', () => {
     const onPress = jest.fn();
-    const { getByText } = render(<ShowButton onPress={onPress}>Show Answer</ShowButton>);
+    const { getByText } = render(<Button onPress={onPress}>Show Answer</Button>);
     const btn = getByText('Show Answer');
     expect(btn).toBeTruthy();
     fireEvent.press(btn);
     expect(onPress).toHaveBeenCalled();
   });
 
-  test('CheatButton renders children and fires onPress', () => {
+  test('Button supports soft styling', () => {
     const onPress = jest.fn();
-    const { getByText } = render(<CheatButton onPress={onPress}>Cheat</CheatButton>);
+    const { getByText } = render(<Button onPress={onPress} variant="soft">Cheat</Button>);
     const btn = getByText('Cheat');
     expect(btn).toBeTruthy();
     fireEvent.press(btn);
     expect(onPress).toHaveBeenCalled();
   });
 
-  test('BackButton renders children and fires onPress', () => {
+  test('Button supports outline styling', () => {
     const onPress = jest.fn();
-    const { getByText } = render(<BackButton onPress={onPress}>Back</BackButton>);
+    const { getByText } = render(<Button onPress={onPress} variant="outline">Back</Button>);
     const btn = getByText('Back');
     expect(btn).toBeTruthy();
     fireEvent.press(btn);

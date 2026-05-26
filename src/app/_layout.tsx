@@ -1,15 +1,28 @@
 import { DarkTheme, DefaultTheme, ThemeProvider } from '@react-navigation/native';
+import { Stack } from 'expo-router';
 import { useColorScheme } from 'react-native';
 
-import { AnimatedSplashOverlay } from '@/components/animated-icon';
-import AppTabs from '@/components/app-tabs';
-
-export default function TabLayout() {
+export default function RootLayout() {
   const colorScheme = useColorScheme();
+
   return (
     <ThemeProvider value={colorScheme === 'dark' ? DarkTheme : DefaultTheme}>
-      <AnimatedSplashOverlay />
-      <AppTabs />
+      <Stack
+        screenOptions={{
+          headerStyle: {
+            backgroundColor: '#4F46E5',
+          },
+          headerTintColor: '#FFFFFF',
+          headerTitleStyle: {
+            color: '#FFFFFF',
+            fontWeight: '700',
+          },
+        }}
+      >
+        <Stack.Screen name="index" options={{ title: 'Home' }} />
+        <Stack.Screen name="quiz" options={{ title: 'Quiz' }} />
+        <Stack.Screen name="cheat" options={{ title: 'Cheat' }} />
+      </Stack>
     </ThemeProvider>
   );
 }

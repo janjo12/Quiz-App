@@ -1,11 +1,6 @@
-import AnswerBox from '@/components/AnswerBox';
-import AnswerText from '@/components/AnswerText';
-import BackButton from '@/components/BackButton';
-import Background from '@/components/Background';
-import Container from '@/components/Container';
-import ShowButton from '@/components/ShowButton';
-import Subtitle from '@/components/Subtitle';
-import Title from '@/components/Title';
+import AppText from '@/components/AppText';
+import Button from '@/components/Button';
+import { Content, Screen, Surface } from '@/components/Layout';
 import { useLocalSearchParams, useRouter } from 'expo-router';
 import React, { useState } from 'react';
 
@@ -57,24 +52,22 @@ export default function CheatRoute() {
   }
 
   return (
-    <Background>
-      <Container>
-        <Title>Cheat Screen</Title>
-        <Subtitle>Tap the button below to reveal the correct answer for the current question.</Subtitle>
+    <Screen>
+      <Content>
+        <AppText variant="title">Cheat Screen</AppText>
+        <AppText variant="muted">Tap the button below to reveal the correct answer for the current question.</AppText>
 
-        <ShowButton onPress={handleShow}>Show Answer</ShowButton>
+        <Button fullWidth onPress={handleShow}>Show Answer</Button>
 
         {revealed && (
-          <AnswerBox>
-            <AnswerText>Answer: {answer ? 'True' : 'False'}</AnswerText>
-          </AnswerBox>
+          <Surface variant="answer">
+            <AppText variant="answer">Answer: {answer ? 'True' : 'False'}</AppText>
+          </Surface>
         )}
 
         {/* Replace keeps the back stack focused on the quiz flow instead of piling up cheat screens. */}
-        <BackButton onPress={() => router.replace(`/quiz?index=${index}`)}>Back to Quiz</BackButton>
-      </Container>
-    </Background>
+        <Button onPress={() => router.replace(`/quiz?index=${index}`)} variant="outline">Back to Quiz</Button>
+      </Content>
+    </Screen>
   );
 }
-
-

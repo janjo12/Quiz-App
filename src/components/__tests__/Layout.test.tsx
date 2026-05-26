@@ -1,14 +1,14 @@
-import SafeAreaWrapper from '@/components/SafeAreaWrapper';
+import { SafeContent } from '@/components/Layout';
 import { render } from '@testing-library/react-native';
 import React from 'react';
 import { Text } from 'react-native';
 
-describe('SafeAreaWrapper', () => {
-  test('renders children inside SafeAreaView', () => {
+describe('Layout', () => {
+  test('SafeContent renders children inside SafeAreaView', () => {
     const { getByText } = render(
-      <SafeAreaWrapper>
+      <SafeContent>
         <Text>Safe content</Text>
-      </SafeAreaWrapper>
+      </SafeContent>
     );
 
     expect(getByText('Safe content')).toBeTruthy();
